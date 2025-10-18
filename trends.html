@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Report Hub - Trends</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Raleway:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Global font setting for the entire page */
+    * {
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    body {
+      font-family: 'Raleway', sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* All headings to use Raleway */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    .logo-area {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+    }
+    
+    .main-title {
+      font-family: 'DM Serif Display', serif; /* Keep this one serif for branding */
+      font-size: 28px;
+      margin: 0;
+      line-height: 1.1;
+    }
+    
+    .sub-title {
+      font-size: 14px;
+      font-weight: normal;
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    .nav-area {
+      position: absolute;
+      right: 20px;
+      top: 15px;
+      font-size: 14px;
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    .nav-area a {
+      color: white;
+      text-decoration: none;
+      margin: 0 6px;
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    .nav-area a.active {
+      font-weight: bold;
+    }
+    
+    .tail-fin {
+      position: absolute;
+      right: 50%;
+      top: 0;
+      height: 80px;
+    }
+    
+    /* Main content container */
+    .main-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    h2 {
+      margin-top: 0;
+      font-weight: 600;
+      color: #2d3748;
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    .dropdown-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    .dropdown-row label {
+      margin-right: 12px;
+      font-weight: 500;
+      color: #4a5568;
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    select {
+      padding: 6px 12px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    /* Enhanced chart sections with better visual separation */
+    .chart-section {
+      margin-bottom: 45px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    
+    .chart-section-header {
+      background-color: #edf2f7;
+      padding: 15px 20px;
+      border-bottom: 1px solid #e2e8f0;
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    .chart-section-header h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #2d3748;
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    .chart-section-body {
+      padding: 20px;
+      background-color: white;
+    }
+    
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 25px;
+    }
+    
+    .chart-block {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+    
+    .chart-block h3 {
+      margin-top: 0;
+      font-size: 1rem;
+      color: #374151;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    .section-title {
+      font-size: 1.2rem;
+      margin: 40px 0 25px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #2d3748;
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    /* Footer styling */
+    footer {
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    .footer-links a {
+      font-family: 'Raleway', sans-serif;
+    }
+    
+    @media (max-width: 900px) {
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body style="background-color: #f0f2f5;">
+    <header style="height: 90px; padding: 0; overflow: visible; position: fixed; top: 0; left: 0; right: 0; z-index: 100;">
+        <div class="container" style="height: 100%; padding-top: 20px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <!-- Logo section with fixed sizes -->
+            <div class="logo" style="height: 60px; display: flex; align-items: flex-end; position: relative;">
+                <div style="display: flex; flex-direction: column; margin-bottom: 0;">
+                    <span class="logo-text text-fade-in" style="margin: 0; line-height: 1.2;">Test Report Hub</span>
+                    <span class="subtitle-fade-in" style="font-size: 12px; font-weight: normal; font-family: 'Raleway', sans-serif; margin-top: -2px; margin-bottom: 0; letter-spacing: 0.5px;">by COE</span>
+                </div>
+                <img src="images/ba-tailFinn.png" alt="British Airways Tail Fin" 
+                     class="tail-fin-animation"
+                     style="height: 65px; width: auto; display: block; position: absolute; bottom: -10px; left: 220px;">
+            </div>
+            
+            <!-- Navigation menu -->
+            <div class="nav-links" style="position: absolute; top: 10px; right: 20px; font-family: 'Raleway', sans-serif; font-size: 14px;">
+                <a href="index.html" class="nav-link" style="color: white; text-decoration: none; margin: 0 5px;">Dashboard</a> |
+                <a href="trends.html" class="nav-link active" style="color: white; text-decoration: none; margin: 0 5px;">Trends</a> |
+                <a href="repository-analytics.html" class="nav-link" style="color: white; text-decoration: none; margin: 0 5px;">Repository Analytics</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container" style="margin-top: 120px; background-color: #fff; border-radius: 10px 10px 0 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px;">
+    <!-- Header with timeline selector moved right -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px;">
+      <h3 style="margin: 0; font-family: 'Raleway', sans-serif;"><i class="fa fa-cogs"></i> Build Analytics</h3>
+      
+      <!-- New time range selector using the styles you provided -->
+      <div class="time-filter">
+        <label for="time-range">Data Timeline:</label>
+        <select id="time-range">
+          <option value="24h">Last 24 Hours</option>
+          <option value="7d" selected>Last 7 Days</option>
+          <option value="30d">Last 30 Days</option>
+          <option value="90d">Last 90 Days</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Success rate trend section with enhanced styling -->
+    <div class="chart-section">
+      <div class="chart-section-header">
+        <h3 style="font-family: 'Raleway', sans-serif;"><i class="fa fa-chart-area"></i> Build Rate Overview</h3>
+      </div>
+      <div class="chart-section-body">
+        <canvas id="successRateTrend" height="80"></canvas>
+      </div>
+    </div>
+
+    <!-- Build status overview section with enhanced styling -->
+    <div class="chart-section">
+      <div class="chart-section-header">
+        <h3 style="font-family: 'Raleway', sans-serif;"><i class="fa fa-chart-bar"></i> Build Status Overview</h3>
+      </div>
+      <div class="chart-section-body">
+        <canvas id="stackedBarChart" height="80"></canvas>
+      </div>
+    </div>
+
+    <!-- Detailed metrics section title -->
+    <h3 class="section-title" style="font-family: 'Raleway', sans-serif;"><i class="fa fa-pie-chart"></i> Detailed Repository Metrics</h3>
+    
+    <!-- Three-column charts grid -->
+    <div class="charts-grid">
+      <div class="chart-block">
+        <h3 style="font-family: 'Raleway', sans-serif;">Build Distribution by Repo</h3>
+        <canvas id="pieChart"></canvas>
+      </div>
+      <div class="chart-block">
+        <h3 style="font-family: 'Raleway', sans-serif;">Failure Rate by Repo</h3>
+        <canvas id="failureBarChart"></canvas>
+      </div>
+      <div class="chart-block">
+        <h3 style="font-family: 'Raleway', sans-serif;">Success Rate by Repo</h3>
+        <canvas id="successBarChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+    <footer class="compact-footer" style="font-family: 'Raleway', sans-serif;">
+        <div class="container">
+            <div style="display: flex; flex-direction: column; align-items: center; font-family: 'Raleway', sans-serif;">
+                <img src="images/ba-ribbon.png" alt="British Airways Logo">
+                <div style="font-family: 'Raleway', sans-serif;">&copy; 2025 COE</div>
+            </div>
+            <div class="footer-links">
+                <a href="#" style="font-family: 'Raleway', sans-serif;">Documentation</a>
+                <a href="#" style="font-family: 'Raleway', sans-serif;">Feedback</a>
+                <a href="#" style="font-family: 'Raleway', sans-serif;">Support</a>
+            </div>
+        </div>
+    </footer>
+  
+  <script src="trends.js"></script>
+  
+  <!-- Add Chart.js configuration to use Raleway for all chart text -->
+  <script>
+    // Set Raleway as the default font for all Chart.js charts
+    Chart.defaults.font.family = "'Raleway', sans-serif";
+  </script>
+</body>
+</html>

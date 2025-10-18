@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Report Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+</head>
+<body>
+    <!-- Updated header with fixed position -->
+    <header style="height: 90px; padding: 0; overflow: visible; position: fixed; top: 0; left: 0; right: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div class="container" style="height: 100%; padding-top: 20px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <!-- Logo section with fixed sizes -->
+            <div class="logo" style="height: 60px; display: flex; align-items: flex-end; position: relative;">
+                <div style="display: flex; flex-direction: column; margin-bottom: 0;">
+                    <span class="logo-text text-fade-in" style="margin: 0; line-height: 1.2;">Test Report Hub</span>
+                    <span class="subtitle-fade-in" style="font-size: 12px; font-weight: normal; font-family: 'Raleway', sans-serif; margin-top: -2px; margin-bottom: 0; letter-spacing: 0.5px;">by COE</span>
+                </div>
+                <img src="images/ba-tailFinn.png" alt="British Airways Tail Fin" 
+                     class="tail-fin-animation"
+                     style="height: 65px; width: auto; display: block; position: absolute; bottom: -10px; left: 220px;">
+            </div>
+            
+            <!-- Navigation menu -->
+            <div class="nav-links" style="position: absolute; top: 10px; right: 20px; font-family: 'Raleway', sans-serif; font-size: 14px;">
+                <a href="index.html" class="nav-link active" style="color: white; text-decoration: none; margin: 0 5px;">Dashboard</a> |
+                <a href="trends.html" class="nav-link" style="color: white; text-decoration: none; margin: 0 5px;">Trends</a> |
+                <a href="repository-analytics.html" class="nav-link" style="color: white; text-decoration: none; margin: 0 5px;">Repository Analytics</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main content with padding to accommodate fixed header -->
+    <div class="main-content" style="padding-top: 100px;">
+    <div class="container">
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Repositories</div>
+                <div class="stat-value">5</div>
+                <div class="stat-description">Monitored repositories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Overall Pass Rate</div>
+                <div class="stat-value">80%</div>
+                <div class="stat-description">Across all repositories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Critical Tests</div>
+                <div class="stat-value">12</div>
+                <div class="stat-description">High priority tests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Last Updated</div>
+                <div class="stat-value">Today, 14:30</div>
+                <div class="stat-description">Automatic daily updates</div>
+            </div>
+        </div>
+        
+        <div class="dashboard-controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search repositories...">
+            </div>
+                <div class="view-toggle">
+                    <button id="gridViewBtn" class="toggle-btn active">
+                        <i class="fas fa-th-large"></i>
+                </button>
+                    <button id="listViewBtn" class="toggle-btn">
+                        <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="gridView" class="repositories-grid">
+            <!-- Repository cards will be dynamically added here -->
+        </div>
+        
+        <div id="listView" class="repositories-list">
+            <!-- Repository list items will be dynamically added here -->
+        </div>
+    </div>
+    
+    <footer class="compact-footer">
+        <div class="container">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <img src="images/ba-ribbon.png" alt="British Airways Logo">
+                <div>&copy; 2025 COE</div>
+            </div>
+            <div class="footer-links">
+                <a href="#">Documentation</a>
+                <a href="#">Feedback</a>
+                <a href="#">Support</a>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const gridViewBtn = document.getElementById('gridViewBtn');
+            const listViewBtn = document.getElementById('listViewBtn');
+            const gridView = document.getElementById('gridView');
+            const listView = document.getElementById('listView');
+            const searchInput = document.getElementById('searchInput');
+            
+            // View switching
+            gridViewBtn.addEventListener('click', function() {
+                gridView.style.display = 'grid';
+                listView.style.display = 'none';
+                gridViewBtn.classList.add('active');
+                listViewBtn.classList.remove('active');
+            });
+            
+            listViewBtn.addEventListener('click', function() {
+                gridView.style.display = 'none';
+                listView.style.display = 'block';
+                listViewBtn.classList.add('active');
+                gridViewBtn.classList.remove('active');
+            });
+            
+            // Initialize with grid view
+            gridView.style.display = 'grid';
+            listView.style.display = 'none';
+            gridViewBtn.classList.add('active');
+            
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const gridCards = document.querySelectorAll('.repository-card');
+                const listItems = document.querySelectorAll('.repository-list-item');
+                
+                // Filter grid view
+                gridCards.forEach(card => {
+                    const name = card.querySelector('.repository-name').textContent.toLowerCase();
+                    const description = card.querySelector('.repository-description').textContent.toLowerCase();
+                    
+                    if (name.includes(searchTerm) || description.includes(searchTerm)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Filter list view
+                listItems.forEach(item => {
+                    const name = item.querySelector('h3').textContent.toLowerCase();
+                    const description = item.querySelector('p').textContent.toLowerCase();
+                    
+                    if (name.includes(searchTerm) || description.includes(searchTerm)) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Add back button to report pages when loaded via "View Report"
+            // This function creates and injects a back button script to target repositories
+            function addBackButtonToReports() {
+                // For each repository in our config
+                if (typeof REPOSITORIES !== 'undefined') {
+                    REPOSITORIES.forEach(repo => {
+                        // Create a link to the report
+                        const reportUrl = repo.url;
+                        const viewReportLinks = document.querySelectorAll('.view-report');
+                        
+                        // For each View Report link
+                        viewReportLinks.forEach(link => {
+                            // If it's a link to this repo
+                            if (link.href === reportUrl) {
+                                // Set a URL parameter to indicate the need for a back button
+                                link.href = reportUrl + '?from=hub';
+                            }
+                        });
+                    });
+                }
+                
+                // Check if we are on a report page and need to add a back button
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('from') === 'hub') {
+                    // We're on a report page that was accessed from the hub
+                    // Create and add a back button
+                    const backButton = document.createElement('div');
+                    backButton.className = 'back-button';
+                    backButton.innerHTML = '<a href="javascript:history.back()"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>';
+                    
+                    // Style the back button
+                    backButton.style.position = 'fixed';
+                    backButton.style.top = '20px';
+                    backButton.style.left = '20px';
+                    backButton.style.padding = '10px 15px';
+                    backButton.style.backgroundColor = 'rgba(52, 152, 219, 0.9)';
+                    backButton.style.color = 'white';
+                    backButton.style.borderRadius = '8px';
+                    backButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+                    backButton.style.zIndex = '1000';
+                    backButton.style.cursor = 'pointer';
+                    
+                    // Add hover effect
+                    backButton.addEventListener('mouseover', function() {
+                        this.style.backgroundColor = 'rgba(41, 128, 185, 1)';
+                    });
+                    
+                    backButton.addEventListener('mouseout', function() {
+                        this.style.backgroundColor = 'rgba(52, 152, 219, 0.9)';
+                    });
+                    
+                    // Insert at the beginning of the body
+                    document.body.insertBefore(backButton, document.body.firstChild);
+                }
+            }
+            
+            // Execute the function to add back buttons
+            addBackButtonToReports();
+            
+            // Also inject a script that will add back buttons to target pages
+            // This script will be executed on the report pages
+            function injectBackButtonScript() {
+                const scriptContent = `
+                (function() {
+                    // Check if we're on a page that should have a back button
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('from') === 'hub') {
+                        // Create and add a back button
+                        const backButton = document.createElement('div');
+                        backButton.className = 'back-button';
+                        backButton.innerHTML = '<a href="javascript:history.back()"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>';
+                        
+                        // Style the back button
+                        backButton.style.position = 'fixed';
+                        backButton.style.top = '20px';
+                        backButton.style.left = '20px';
+                        backButton.style.padding = '10px 15px';
+                        backButton.style.backgroundColor = 'rgba(52, 152, 219, 0.9)';
+                        backButton.style.color = 'white';
+                        backButton.style.borderRadius = '8px';
+                        backButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+                        backButton.style.zIndex = '1000';
+                        backButton.style.cursor = 'pointer';
+                        
+                        // Add hover effect
+                        backButton.addEventListener('mouseover', function() {
+                            this.style.backgroundColor = 'rgba(41, 128, 185, 1)';
+                        });
+                        
+                        backButton.addEventListener('mouseout', function() {
+                            this.style.backgroundColor = 'rgba(52, 152, 219, 0.9)';
+                        });
+                        
+                        // Insert at the beginning of the body
+                        document.body.insertBefore(backButton, document.body.firstChild);
+                    }
+                })();
+                `;
+                
+                // Create a hidden script element with this code
+                const script = document.createElement('script');
+                script.id = 'back-button-injector';
+                script.type = 'text/javascript';
+                script.textContent = scriptContent;
+                
+                // Add it to the document head
+                document.head.appendChild(script);
+            }
+            
+            // Execute the script injection
+            injectBackButtonScript();
+        });
+    </script>
+    <script>
+        // Add this function to format relative time (you already have this)
+        function getRelativeTimeString(timestamp) {
+            if (!timestamp) return "Unknown";
+            
+            const now = new Date();
+            const past = new Date(timestamp);
+            const diffInSeconds = Math.floor((now - past) / 1000);
+            
+            if (diffInSeconds < 60) {
+                return diffInSeconds + ' seconds ago';
+            } else if (diffInSeconds < 3600) {
+                const minutes = Math.floor(diffInSeconds / 60);
+                return minutes + (minutes === 1 ? ' minute ago' : ' minutes ago');
+            } else if (diffInSeconds < 86400) {
+                const hours = Math.floor(diffInSeconds / 3600);
+                return hours + (hours === 1 ? ' hour ago' : ' hours ago');
+            } else {
+                const days = Math.floor(diffInSeconds / 86400);
+                if (days < 7) {
+                    return days + (days === 1 ? ' day ago' : ' days ago');
+                } else {
+                    const weeks = Math.floor(days / 7);
+                    return weeks + (weeks === 1 ? ' week ago' : ' weeks ago');
+                }
+            }
+        }
+        
+        // Add this to update all timestamps on the page
+        function updateAllTimestamps() {
+            // Loop through repositories and update timestamps
+            REPOSITORIES.forEach((repo, index) => {
+                // Skip repositories without a timestamp
+                if (!repo.lastUpdateTimestamp) return;
+                
+                // Find all elements showing this repository's timestamp
+                const timeElements = document.querySelectorAll(`.timestamp-repo-${index}`);
+                timeElements.forEach(element => {
+                    element.textContent = getRelativeTimeString(repo.lastUpdateTimestamp);
+                });
+            });
+            
+            // Also update the overall stats last updated time
+            const lastUpdatedElem = document.querySelector('.last-updated-time');
+            if (lastUpdatedElem && OVERALL_STATS.lastUpdated) {
+                lastUpdatedElem.textContent = getRelativeTimeString(OVERALL_STATS.lastUpdated);
+            }
+        }
+        
+        // Call on page load and periodically
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial update
+            updateAllTimestamps();
+            
+            // Update every minute
+            setInterval(updateAllTimestamps, 60000);
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the tail fin image
+            const tailFin = document.querySelector('.tail-fin-animation');
+            // Get the text element
+            const titleText = document.querySelector('.text-fade-in');
+            
+            // Function to reset animations
+            function resetAnimations() {
+                // Remove the animation classes
+                tailFin.classList.remove('tail-fin-animation');
+                titleText.classList.remove('text-fade-in');
+                
+                // Force a reflow to make the removal take effect immediately
+                void tailFin.offsetWidth;
+                void titleText.offsetWidth;
+                
+                // Add the classes back to restart the animations
+                tailFin.classList.add('tail-fin-animation');
+                titleText.classList.add('text-fade-in');
+            }
+
+        });
+    </script>
+</body>
+</html>
